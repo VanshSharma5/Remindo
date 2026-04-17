@@ -4,7 +4,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 from app.core.db import SessionLocal
 from app.services.task_service import get_next_day_tasks
-from app.services.email import send_email
+from app.services.email import build_email_html, send_email
 from app.core.config import settings
 
 
@@ -22,12 +22,10 @@ def send_daily_emails():
         for task in tasks:
             user_map[task.user.email].append(task)
         for email, tasks in user_map.items():
-            content = "\n".join(
-                [f"- {t.title} at {t.scheduled_at}" for t in tasks]
-            )
+            content = build_email_html(tasks)
             # print(email, "Your Tasks for Tomorrow", content)
             
-            send_email(email, "Your Tasks for Tomorrow", content)
+            send_email(email, "Your Tomorrow's Schedule", tasks)
 
     finally:
         db.close()

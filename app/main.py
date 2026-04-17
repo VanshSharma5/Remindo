@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from app.api.routes import router
 from app.core.scheduler import dummy, start_scheduler
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,8 +18,15 @@ app.add_middleware(
 )
 
 app.include_router(router)
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+@app.get("/")
+async def read_index():
+    return FileResponse('app/static/index.html')
+
 
 @app.on_event("startup")
 async def startup():
     # dummy()
     start_scheduler()
+    pass

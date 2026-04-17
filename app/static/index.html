@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Scheduler</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .glass-effect {
+      backdrop-filter: blur(20px);
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(34, 211, 238, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(34, 211, 238, 0.6); }
+    }
+    
+    .animate-float { animation: float 6s ease-in-out infinite; }
+    .slide-in-up { animation: slideInUp 0.8s ease-out forwards; }
+    .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    
+    .input-focus {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .input-focus:focus {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(34, 211, 238, 0.2);
+    }
+    
+    .btn-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-hover:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .card-hover {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-hover:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 min-h-screen overflow-x-hidden">
+  
+<!-- Loading Screen -->
+<div id="loadingScreen" class="fixed inset-0 bg-gradient-to-br from-slate-950 to-slate-800 flex items-center justify-center z-50">
+  <div class="text-center">
+    <div class="w-20 h-20 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin mx-auto mb-4"></div>
+    <h2 class="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Smart Scheduler</h2>
+    <p class="text-gray-400 mt-2">Loading intelligence...</p>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="min-h-screen flex flex-col justify-center items-center text-center px-4 md:px-6 lg:px-12 relative overflow-hidden">
+  <!-- Animated Background Elements -->
+  <div class="absolute inset-0">
+    <div class="absolute top-20 left-10 w-72 h-72 bg-cyan-500/5 rounded-full blur-3xl animate-float" style="animation-delay: 0s;"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-float" style="animation-delay: 2s;"></div>
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl animate-pulse"></div>
+  </div>
+  
+  <div class="relative z-10 max-w-4xl mx-auto">
+    <div class="animate-pulse-glow mb-6">
+      <i class="fas fa-brain text-6xl md:text-7xl text-cyan-400 mb-6"></i>
+    </div>
+    <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 text-transparent bg-clip-text leading-tight mb-6 slide-in-up">
+      Smart Scheduling
+    </h1>
+    <p class="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto mb-8 slide-in-up" style="animation-delay: 0.2s;">
+      Plan your tasks intelligently with AI-powered scheduling. 
+      <span class="text-cyan-400 font-semibold">Designed for students, professionals & professors.</span>
+    </p>
+    <button onclick="scrollToDashboard()" 
+            class="group btn-hover px-8 md:px-12 py-4 md:py-5 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 rounded-2xl font-bold text-lg shadow-2xl relative overflow-hidden slide-in-up"
+            style="animation-delay: 0.4s;">
+      <span class="relative z-10 flex items-center gap-3">
+        <i class="fas fa-rocket"></i>
+        Get Started
+      </span>
+      <div class="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent -skew-x-12 transform -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-500"></div>
+    </button>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="py-20 md:py-32 px-4 md:px-6 lg:px-12 relative">
+  <div class="absolute inset-0 bg-gradient-to-b from-slate-900/50 to-transparent pointer-events-none"></div>
+  <div class="relative max-w-7xl mx-auto">
+    <div class="text-center mb-20 slide-in-up">
+      <h2 class="text-4xl md:text-5xl text-white bg-clip-text mb-6">
+        Everything You Need
+      </h2>
+      <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+        Powerful features built for modern productivity
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      <div class="group card-hover bg-slate-900/80 glass-effect p-8 rounded-3xl backdrop-blur-xl border border-slate-700/50 hover:border-cyan-500/50 transition-all duration-500 slide-in-up" style="animation-delay: 0.1s;">
+        <div class="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+          <i class="fas fa-bolt text-2xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold mb-4 text-white group-hover:text-cyan-400 transition-colors">⚡ Fast API</h3>
+        <p class="text-gray-400 leading-relaxed">Lightning-fast API integration for instant data sync and management.</p>
+      </div>
+
+      <div class="group card-hover bg-slate-900/80 glass-effect p-8 rounded-3xl backdrop-blur-xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 slide-in-up" style="animation-delay: 0.2s;">
+        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+          <i class="fas fa-robot text-2xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold mb-4 text-white group-hover:text-blue-400 transition-colors">🧠 Smart Planning</h3>
+        <p class="text-gray-400 leading-relaxed">AI-powered scheduling that prioritizes your most important tasks.</p>
+      </div>
+
+      <div class="group card-hover bg-slate-900/80 glass-effect p-8 rounded-3xl backdrop-blur-xl border border-slate-700/50 hover:border-purple-500/50 transition-all duration-500 slide-in-up" style="animation-delay: 0.3s;">
+        <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+          <i class="fas fa-chart-line text-2xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold mb-4 text-white group-hover:text-purple-400 transition-colors">📊 Clean Dashboard</h3>
+        <p class="text-gray-400 leading-relaxed">Beautiful, intuitive interface to manage all your tasks effortlessly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="py-24 md:py-32 px-4 md:px-6 lg:px-12 bg-gradient-to-b from-slate-900 to-slate-950 relative">
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-500/5 via-transparent to-transparent"></div>
+  
+  <div class="relative max-w-7xl mx-auto">
+    <div class="text-center mb-20 slide-in-up">
+      <h2 class="text-4xl md:text-5xl text-white bg-clip-text mb-6">
+        Control Center
+      </h2>
+      <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+        Manage users and tasks with our intuitive dashboard interface
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+      
+      <!-- Create User -->
+      <div class="group card-hover bg-slate-900/90 glass-effect p-8 lg:p-10 rounded-3xl backdrop-blur-xl border border-slate-700/50 hover:border-cyan-500/50 transition-all duration-500 slide-in-up" style="animation-delay: 0.1s;">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl flex items-center justify-center shrink-0">
+            <i class="fas fa-user-plus text-xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-white">Create User</h3>
+        </div>
+        <div class="space-y-4">
+          <input id="email" class="w-full input-focus p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 focus:border-cyan-400 focus:outline-none text-white placeholder-gray-400 transition-all duration-300" placeholder="✉️ Email"/>
+          <input id="profession" class="w-full input-focus p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 focus:border-blue-400 focus:outline-none text-white placeholder-gray-400 transition-all duration-300" placeholder="💼 Profession"/>
+          <button onclick="createUser()" class="w-full btn-hover bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 py-4 rounded-2xl font-bold text-lg shadow-xl transition-all duration-300 flex items-center justify-center gap-3">
+            <i class="fas fa-plus"></i>
+            Create User
+          </button>
+        </div>
+        <pre id="createUserResult" class="mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-green-400 max-h-32 overflow-auto font-mono border border-green-500/30"></pre>
+      </div>
+
+      <!-- Get User -->
+      <div class="group card-hover bg-slate-900/90 glass-effect p-8 lg:p-10 rounded-3xl backdrop-blur-xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 slide-in-up" style="animation-delay: 0.2s;">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center shrink-0">
+            <i class="fas fa-user-search text-xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-white">Get User</h3>
+        </div>
+        <div class="space-y-4">
+          <input id="searchEmail" class="w-full input-focus p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 focus:border-purple-400 focus:outline-none text-white placeholder-gray-400 transition-all duration-300" placeholder="🔍 Search by Email"/>
+          <button onclick="getUser()" class="w-full btn-hover bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 py-4 rounded-2xl font-bold text-lg shadow-xl transition-all duration-300 flex items-center justify-center gap-3">
+            <i class="fas fa-search"></i>
+            Fetch User
+          </button>
+        </div>
+        <pre id="getUserResult" class="mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-green-400 max-h-32 overflow-auto font-mono border border-green-500/30"></pre>
+      </div>
+
+      <!-- Add Task -->
+      <div class="group card-hover bg-slate-900/90 glass-effect p-8 lg:p-10 rounded-3xl backdrop-blur-xl border border-slate-700/50 hover:border-purple-500/50 transition-all duration-500 lg:col-span-2 slide-in-up" style="animation-delay: 0.3s;">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shrink-0">
+            <i class="fas fa-plus-circle text-xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-white">Add Task</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <input id="userId" class="input-focus p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 focus:border-pink-400 focus:outline-none text-white placeholder-gray-400 transition-all duration-300" placeholder="🆔 User ID"/>
+          <input id="title" class="input-focus p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 focus:border-cyan-400 focus:outline-none text-white placeholder-gray-400 transition-all duration-300" placeholder="📝 Title"/>
+          <input id="description" class="input-focus p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 focus:border-blue-400 focus:outline-none text-white placeholder-gray-400 transition-all duration-300 md:col-span-2" placeholder="📄 Description"/>
+          <input id="priority" type="number" class="input-focus p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 focus:border-purple-400 focus:outline-none text-white placeholder-gray-400 transition-all duration-300" placeholder="⭐ Priority (1-10)"/>
+          <input id="datetime" type="datetime-local" class="input-focus p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 focus:border-green-400 focus:outline-none text-white transition-all duration-300"/>
+        </div>
+        <button onclick="addTask()" class="w-full btn-hover bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 py-4 rounded-2xl font-bold text-lg shadow-xl transition-all duration-300 flex items-center justify-center gap-3">
+          <i class="fas fa-tasks"></i>
+          Add Task
+        </button>
+        <pre id="addTaskResult" class="mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-green-400 max-h-32 overflow-auto font-mono border border-green-500/30"></pre>
+      </div>
+
+      <!-- Get Tasks -->
+      <div class="group card-hover bg-slate-900/90 glass-effect p-8 lg:p-10 rounded-3xl backdrop-blur-xl border border-slate-700/50 hover:border-pink-500/50 transition-all duration-500 slide-in-up lg:col-span-2" style="animation-delay: 0.4s;">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-12 h-12 bg-gradient-to-r from-pink-500 to-orange-500 rounded-2xl flex items-center justify-center shrink-0">
+            <i class="fas fa-list-check text-xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-white">Get Tasks</h3>
+        </div>
+        <div class="space-y-4 mb-6">
+          <input id="taskUserId" class="w-full input-focus p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 focus:border-orange-400 focus:outline-none text-white placeholder-gray-400 transition-all duration-300" placeholder="🆔 User ID"/>
+          <button onclick="getTasks()" class="w-full btn-hover bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-400 hover:to-orange-400 py-4 rounded-2xl font-bold text-lg shadow-xl transition-all duration-300 flex items-center justify-center gap-3">
+            <i class="fas fa-list"></i>
+            Fetch Tasks
+          </button>
+        </div>
+        <pre id="tasksResult" class="p-4 bg-slate-800/50 rounded-2xl text-xs text-green-400 max-h-64 overflow-auto font-mono border border-green-500/30"></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-12 px-4 md:px-6 lg:px-12 text-center border-t border-slate-800/50">
+  <p class="text-gray-500">&copy; 2026 Smart Scheduler. Built with ❤️ for productivity.</p>
+</footer>
+
+<script>
+const BASE_URL = "https://dev.1shhub.com";
+
+// Loading animation
+window.addEventListener('load', () => {
+  document.getElementById('loadingScreen').style.opacity = '0';
+  setTimeout(() => {
+    document.getElementById('loadingScreen').style.display = 'none';
+  }, 500);
+});
+
+function scrollToDashboard() {
+  document.getElementById("dashboard").scrollIntoView({ 
+    behavior: "smooth" 
+  });
+}
+
+async function createUser() {
+  const email = document.getElementById("email").value;
+  const profession = document.getElementById("profession").value;
+  const resultEl = document.getElementById("createUserResult");
+
+  if (!email || !profession) {
+    resultEl.textContent = "Please fill all fields!";
+    resultEl.className = "mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-red-400 max-h-32 overflow-auto font-mono border border-red-500/30";
+    return;
+  }
+
+  resultEl.textContent = "Creating...";
+  resultEl.className = "mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-blue-400 max-h-32 overflow-auto font-mono border border-blue-500/30";
+
+  try {
+    const res = await fetch(`${BASE_URL}/users`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, profession })
+    });
+
+    const data = await res.json();
+    resultEl.textContent = JSON.stringify(data, null, 2);
+    resultEl.className = "mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-green-400 max-h-32 overflow-auto font-mono border border-green-500/30";
+  } catch (error) {
+    resultEl.textContent = `Error: ${error.message}`;
+    resultEl.className = "mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-red-400 max-h-32 overflow-auto font-mono border border-red-500/30";
+  }
+}
+
+async function getUser() {
+  const email = document.getElementById("searchEmail").value;
+  const resultEl = document.getElementById("getUserResult");
+
+  if (!email) {
+    resultEl.textContent = "Please enter an email!";
+    resultEl.className = "mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-red-400 max-h-32 overflow-auto font-mono border border-red-500/30";
+    return;
+  }
+
+  resultEl.textContent = "Fetching...";
+  resultEl.className = "mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-blue-400 max-h-32 overflow-auto font-mono border border-blue-500/30";
+
+  try {
+    const res = await fetch(`${BASE_URL}/users/${email}`);
+    const data = await res.json();
+    resultEl.textContent = JSON.stringify(data, null, 2);
+    resultEl.className = "mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-green-400 max-h-32 overflow-auto font-mono border border-green-500/30";
+  } catch (error) {
+    resultEl.textContent = `Error: ${error.message}`;
+    resultEl.className = "mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-red-400 max-h-32 overflow-auto font-mono border border-red-500/30";
+  }
+}
+
+async function addTask() {
+  const userId = document.getElementById("userId").value;
+  const title = document.getElementById("title").value;
+  const description = document.getElementById("description").value;
+  const priority = parseInt(document.getElementById("priority").value);
+  const datetime = document.getElementById("datetime").value;
+  const resultEl = document.getElementById("addTaskResult");
+
+  if (!userId || !title || !datetime) {
+    resultEl.textContent = "Please fill required fields!";
+    resultEl.className = "mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-red-400 max-h-32 overflow-auto font-mono border border-red-500/30";
+    return;
+  }
+
+  resultEl.textContent = "Adding task...";
+  resultEl.className = "mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-blue-400 max-h-32 overflow-auto font-mono border border-blue-500/30";
+
+  try {
+    const res = await fetch(`${BASE_URL}/tasks/${userId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title,
+        description,
+        priority,
+        scheduled_at: new Date(datetime).toISOString()
+      })
+    });
+
+    const data = await res.json();
+    resultEl.textContent = JSON.stringify(data, null, 2);
+    resultEl.className = "mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-green-400 max-h-32 overflow-auto font-mono border border-green-500/30";
+  } catch (error) {
+    resultEl.textContent = `Error: ${error.message}`;
+    resultEl.className = "mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-red-400 max-h-32 overflow-auto font-mono border border-red-500/30";
+  }
+}
+
+async function getTasks() {
+  const userId = document.getElementById("taskUserId").value;
+  const resultEl = document.getElementById("tasksResult");
+
+  if (!userId) {
+    resultEl.textContent = "Please enter a User ID!";
+    resultEl.className = "mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-red-400 max-h-64 overflow-auto font-mono border border-red-500/30";
+    return;
+  }
+
+  resultEl.textContent = "Fetching tasks...";
+  resultEl.className = "mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-blue-400 max-h-64 overflow-auto font-mono border border-blue-500/30";
+
+  try {
+    const res = await fetch(`${BASE_URL}/tasks/${userId}`);
+    const data = await res.json();
+    resultEl.textContent = JSON.stringify(data, null, 2);
+    resultEl.className = "mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-green-400 max-h-64 overflow-auto font-mono border border-green-500/30";
+  } catch (error) {
+    resultEl.textContent = `Error: ${error.message}`;
+    resultEl.className = "mt-6 p-4 bg-slate-800/50 rounded-2xl text-xs text-red-400 max-h-64 overflow-auto font-mono border border-red-500/30";
+  }
+}
+
+// Smooth scroll for mobile
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>
