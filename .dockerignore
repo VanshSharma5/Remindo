@@ -1,0 +1,27 @@
+# Version Control
+.git
+.gitignore
+
+# Environment & Secrets
+.env
+*.key
+secrets.txt
+
+# Local IDE Settings
+.vscode/
+.idea/
+*.swp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Build Artifacts & Logs
+dist/
+build/
+__pycache__/
+*.log
+tmp/
+
+# Local dependency
+.venv

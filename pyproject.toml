@@ -1,0 +1,19 @@
+[project]
+name = "remindo"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "asyncpg",
+    "pydantic[email]",
+    "python-dotenv",
+    "httpx",
+    "apscheduler",
+    "aiosmtplib",
+    "pydantic-settings>=2.13.1",
+    "uvloop>=0.22.1",
+    "alembic>=1.18.4",
+    "psycopg2-binary>=2.9.11",
+    "sqlalchemy>=2.0.49",
+]

@@ -1,0 +1,60 @@
+#!/bin/bash
+function custon_docker {
+    docker-compose -f docker-compose-btks.yml up 
+
+    docker-compose -f docker-compose-btks.yml down
+}
+
+function test {
+    $BASE_COMMAND pytest -vs
+}
+
+function makemigrations {
+    if [ -n "$1" ]; then
+        $BASE_COMMAND alembic revision --autogenerate -m "$1"
+    else
+        echo "Please Enter the revision Message!"
+    fi
+}
+
+function migrate {
+        $BASE_COMMAND alembic upgrade head
+}
+
+function run {
+    case "$1" in 
+        --docker-compose)
+            echo "Building Dependencies before..."
+            docker-compose up --build -d
+        ;;
+    esac
+
+    $BASE_COMMAND main.py
+}
+
+
+BASE_COMMAND="uv run"
+
+
+case "$1" in
+    run)
+        echo "Starting service..."
+        run "$2"
+        ;;
+    test)
+        echo "Start Testing..."
+        test
+        ;;
+    makemigrations)
+        echo "Generating migration..."
+        makemigrations "$2"
+        ;;
+    migrate)
+        echo "Start Migrating..."
+        migrate 
+        ;;
+    *)
+        echo "Usage: $0 {run|test}"
+        exit 1
+        ;;
+esac
