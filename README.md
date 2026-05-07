@@ -1,1 +1,1 @@
-## Just a BAAS
+## MCP for Email with some sause
